@@ -1,0 +1,171 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden; /* Скрыть возможные вылезающие элементы анимаций */
+}
+
+.container {
+    text-align: center;
+    /* Уберем background-color и box-shadow отсюда, чтобы фон страницы был виден */
+    /* Эти свойства будут применяться к содержимому, если нужно */
+    position: relative;
+    z-index: 10; /* Убедиться, что контент поверх анимаций */
+    padding: 40px; /* Сохраняем отступы */
+    border-radius: 15px; /* Сохраняем скругления */
+}
+
+#question {
+    font-size: 3em;
+    color: #333;
+    margin-bottom: 30px;
+    transition: color 0.5s ease-in-out, opacity 0.5s ease-out; /* Добавлено opacity */
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    transition: opacity 0.5s ease-out; /* Добавлено opacity */
+}
+
+.btn {
+    background-color: #884dff; /* Фиолетовый */
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.5em;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    background-color: #6a3abf;
+    transform: translateY(-3px);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Анимация радуги по всей странице --- */
+.rainbow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Чтобы не мешать кликам */
+    overflow: hidden;
+    z-index: 1; /* Под основным контентом */
+    /* Фоновая радуга будет появляться поверх основного фона body */
+}
+
+.rainbow-band {
+    position: absolute;
+    height: 100%;
+    width: 0; /* Начинаем с нулевой ширины */
+    opacity: 0;
+    transition: all 0.5s ease-out; /* Плавное появление */
+}
+
+/* Цвета радуги */
+.rainbow-band:nth-child(1) { background-color: #ff0000; left: 0; } /* Красный */
+.rainbow-band:nth-child(2) { background-color: #ff7f00; left: 14.28%; } /* Оранжевый */
+.rainbow-band:nth-child(3) { background-color: #ffff00; left: 28.56%; } /* Желтый */
+.rainbow-band:nth-child(4) { background-color: #00ff00; left: 42.84%; } /* Зеленый */
+.rainbow-band:nth-child(5) { background-color: #0000ff; left: 57.12%; } /* Синий */
+.rainbow-band:nth-child(6) { background-color: #4b0082; left: 71.4%; } /* Индиго */
+.rainbow-band:nth-child(7) { background-color: #8b00ff; left: 85.68%; } /* Фиолетовый */
+
+/* Класс для активации анимации радуги */
+.rainbow-active .rainbow-band {
+    width: 14.28%; /* Распределяем поровну 100% / 7 цветов */
+    opacity: 1;
+}
+
+/* --- Танцующие радуги (маленькие элементы) --- */
+.dancing-rainbows {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5; /* Над основной радугой, но под контентом */
+}
+
+.dancing-rainbow {
+    position: absolute;
+    width: 80px; /* Размер радуги */
+    height: 80px;
+    background: linear-gradient(to right,
+        red, orange, yellow, green, blue, indigo, violet);
+    border-radius: 50%;
+    opacity: 0;
+    animation: none; /* Анимация будет добавлена через JS */
+    filter: blur(2px); /* Небольшое размытие для эффекта */
+}
+
+/* Ключевые кадры для танца */
+@keyframes dance {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        transform: translate(var(--dx), var(--dy)) scale(1.2) rotate(calc(var(--rand-rot) * 1deg));
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(calc(var(--dx) * 2), calc(var(--dy) * 2)) scale(0.8) rotate(calc(var(--rand-rot) * 2deg));
+        opacity: 0;
+    }
+}
+
+/* --- Секретное сообщение --- */
+.secret-message {
+    position: fixed; /* Фиксируем на экране */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Центрируем */
+    font-size: 5em; /* Очень крупный текст */
+    font-weight: bold;
+    color: white; /* Белый текст на радужном фоне */
+    text-shadow: 0 0 15px rgba(0,0,0,0.5); /* Тень для читаемости */
+    z-index: 20; /* Поверх всего */
+    opacity: 0; /* Изначально скрыт */
+    transition: opacity 1s ease-in; /* Плавное появление */
+    pointer-events: none; /* Чтобы не блокировать элементы под ним */
+    text-decoration: none; /* Убираем подчеркивание для ссылки */
+    white-space: nowrap; /* Не переносить текст */
+}
+
+.secret-message.show {
+    opacity: 1; /* Показать сообщение */
+}
+
+/* Классы для скрытия вопроса и кнопок */
+#question.hide-element {
+    opacity: 0;
+    pointer-events: none; /* Отключаем взаимодействие */
+}
+
+.buttons.hide-element {
+    opacity: 0;
+    pointer-events: none;
+}
